@@ -1,6 +1,7 @@
 import json, sys, os
 try:
     from discord.ext import commands
+    import aiohttp
     import discord
 except:
     print(f'An error ocurred while trying to import third party library, run INSTALL.bat and try again!')
