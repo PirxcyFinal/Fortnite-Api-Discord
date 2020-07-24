@@ -11,3 +11,8 @@ brnews        : Show the latest Battle Royale news in an embedded gif
 item          : Get info for a item by name.
 ```
 Enjoy <3
+
+For update log, upcoming features and support for this repo you can join my support server!
+[discord.gg/5TVU3n7](https://www.discord.gg/5TVU3n7)
+
+English and Spanish support!
