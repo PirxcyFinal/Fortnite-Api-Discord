@@ -22,6 +22,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
+print('Fortnite-Api-Discord | Made by BayGamerYT')
+print('\nSupport Server: discord.gg/5TVU3n7')
+
 
 import json, sys, os
 try:
@@ -36,8 +39,20 @@ except:
 
 with open('config.json', 'r') as r:
     data = json.load(r)
+    
 
-P = data['Prefix']
+if data['Prefix'] == '':
+    P = 'f!'
+else:
+    P = data['Prefix']
+if data['Token'] == '':
+    error = 'You need to put your´s bot token in config.json file.'
+    print(error)
+    sys.exit(1)
+else:
+    T = data['Token']
+
+
 bot = commands.Bot(command_prefix=P)
 
 app=Flask("")
@@ -103,36 +118,40 @@ async def item(ctx, *args):
     """Search info for entered item name"""
     joinedArgs = ('+'.join(args))
 
-    if args == None:
-        await ctx.send(f'Usage: ``{P}id <item name>``')
-        
-    else:
-        response = await fortnite_api_request(f'cosmetics/br/search?name={joinedArgs}&matchMethod=contains')
+    if args != None:
+        response = await fortnite_api_request(f'cosmetics/br/search/all?name={joinedArgs}&matchMethod=starts')
 
         if response['status'] == 200:
 
-            itemName = response['data']['name']
-            itemID = response['data']['id']
-            itemDesc = response['data']['description']
-            itemImage = response['data']['images']['icon']
-            itemIntroduction = response['data']['introduction']['text']
+            embed_count=0
+            item_left_count=0
+            for item in response['data']:
+                if embed_count != data['Max_Search_Results']:
+                    embed_count+=1
+                    item_id = item['id']
+                    item_name = item['name']
+                    item_description = item['description']
+                    item_icon = item['images']['icon']
+                    item_introduction = item['introduction']['text']
+                    if item['set'] == None:
+                        item_set = 'None'
+                    else:
+                        item_set = item['set']['text']
 
-            embed = discord.Embed(title=f'**{itemName}**', description=None)
-            embed.add_field(name='ID', value=f'``{itemID}``')
-            embed.add_field(name='Description', value=f'``{itemDesc}``')
-            embed.add_field(name='Introduction', value=f'``{itemIntroduction}``')
-            try:
-                itemSet = response['data']['set']['text']
-                embed.add_field(name='Set', value=f'``{itemSet}``')
-            except:
-                embed.add_field(name='Set', value=f'``None``')
-
-            embed.set_thumbnail(url=itemImage)
-
-            await ctx.send(embed=embed)
+                    embed = discord.Embed(title=f'{item_name}')
+                    embed.add_field(name='Description', value=f'``{item_description}``')
+                    embed.add_field(name='ID', value=f'``{item_id}``')
+                    embed.add_field(name='Introduction', value=f'``{item_introduction}``')
+                    embed.add_field(name='Set', value=f'``{item_set}``')
+                    embed.set_thumbnail(url=item_icon)
+                    await ctx.send(embed=embed)
+                else:
+                    item_left_count+=1
+            if item_left_count:
+                max_srch = data['Max_Search_Results']
+                await ctx.send(f'There are ``{item_left_count}`` more results but I\'m set to show ``{max_srch}``')
 
         elif response['status'] == 400:
-
             error = response['error']
 
             embed = discord.Embed(title='Error', 
@@ -141,13 +160,13 @@ async def item(ctx, *args):
             await ctx.send(embed=embed)
 
         elif response['status'] == 404:
-
             error = response['error']
 
             embed = discord.Embed(title='Error', 
             description=f'``{error}``')
 
             await ctx.send(embed=embed)
+
 
 @bot.command(pass_context=True)
 async def cc(ctx, code = None):
@@ -196,8 +215,9 @@ async def cc(ctx, code = None):
 
             await ctx.send(embed=embed)
 
-
-T = data['Token']
+@bot.event
+async def on_command_error(ctx, error):
+    await ctx.send(f'```\n{error}```')
 
 try:
     bot.run(T)

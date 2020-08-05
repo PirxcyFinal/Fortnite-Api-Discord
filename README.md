@@ -11,9 +11,23 @@ This bot has 4 simple commands:
 ```
 help          : Show a simple help message
 brnews        : Show the latest Battle Royale news in an embedded gif
-item          : Get info for a item by name.
+item          : Get info for fetched items.
 cc            : Get info for requested creator code
 ```
+
+# Config
+An example for config.json file is:
+```json
+{
+    "Token": "your_secret_bot_token_from_discord.com/developers",
+	"Prefix": "f!",
+	"Max_Search_Results": 5
+}
+```
+*Note:
+If you don´t set a prefix the bot automically set it to ``f!``
+
+
 Enjoy <3
 
 For update log, upcoming features and support for this repo you can join my support server!
