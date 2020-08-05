@@ -130,7 +130,7 @@ async def item(ctx, *args):
     joinedArgs = ('+'.join(args))
 
     if args != None:
-        response = await fortnite_api_request(f'cosmetics/br/search/all?name={joinedArgs}&matchMethod=starts&language={request_lang}&searchLanguage={response_lang}')
+        response = await fortnite_api_request(f'cosmetics/br/search/all?name={joinedArgs}&matchMethod=starts&language={response_lang}&searchLanguage={request_lang}')
 
         if response['status'] == 200:
 
