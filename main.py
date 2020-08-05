@@ -46,7 +46,7 @@ if data['Prefix'] == '':
 else:
     P = data['Prefix']
 if data['Token'] == '':
-    error = 'You need to put your´s bot token in config.json file.'
+    error = 'You need to put your bot token in config.json file.'
     print(error)
     sys.exit(1)
 else:
