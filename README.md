@@ -9,10 +9,20 @@ First you need to create an application in [Discord Developer Portal]([https://d
 
 * **Configuration:**
 ```css
-Token            : Your bot´s token [str]
-Prefix           : Prefix for the commands. Leave it blank and it set automically to "f!" [str]
-MaxSearchResults : Max search results for "item" command [int]
+Token                   : Your bot´s token [str]
+Prefix                  : Prefix for the commands. Leave it blank and it set automically to "f!" [str]
+MaxSearchResults        : Max search results for "item" command [int]
+Api response lang       : Default language of Fortnite-Api responses. Leave it blanck and it set automically to "en" [str]
+Api request lang        : Default language of Fortnite-Api requests. Leave it blanck and it set automically to "en" [str]
 ```
+
+* Configuration Options:
+
+Api languages:
+```
+ar / de / en / es / es-419 / fr / it / ja / ko / pl / pt-BR / ru / tr / zh-CN / zh-Hant
+```
+
 
 
 * **Commands:**

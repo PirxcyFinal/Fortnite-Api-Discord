@@ -1,5 +1,7 @@
 {
     "Token": "",
     "Prefix": "",
-    "Max_Search_Results": 3
+    "Max_Search_Results": 3,
+    "Api response lang": "en",
+    "Api request lang": "en"
 }

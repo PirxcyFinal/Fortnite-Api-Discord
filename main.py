@@ -40,7 +40,14 @@ except:
 with open('config.json', 'r') as r:
     data = json.load(r)
     
-
+if data['Api response lang'] == '':
+    response_lang = 'en'
+else:
+    response_lang = data['Api response lang']
+if data['Api request lang'] == '':
+    request_lang = 'en'
+else:
+    request_lang = data['Api request lang']
 if data['Prefix'] == '':
     P = 'f!'
 else:
@@ -81,11 +88,15 @@ async def fortnite_api_request(url: str, params: dict = {}) -> dict:
 
 
 @bot.command(pass_context=True)
-async def brnews(ctx, lang = 'en'):
+async def brnews(ctx, l = None):
     """Show the current battle royale news"""
 
-    response = await fortnite_api_request(f'news/br?language={lang}')
+    res_lang = response_lang
+    if l == None:
+        res_lang = response_lang
 
+    response = await fortnite_api_request(f'news/br?language={res_lang}')
+        
     if response['status'] == 200:
 
         image = response['data']['image']
@@ -96,11 +107,11 @@ async def brnews(ctx, lang = 'en'):
         await ctx.send(embed=embed)
 
     elif response['status'] == 400:
-
+ 
         error = response['error']
 
         embed = discord.Embed(title='Error', 
-        description=f'``{error}``')
+                description=f'``{error}``')
 
         await ctx.send(embed=embed)
 
@@ -119,7 +130,7 @@ async def item(ctx, *args):
     joinedArgs = ('+'.join(args))
 
     if args != None:
-        response = await fortnite_api_request(f'cosmetics/br/search/all?name={joinedArgs}&matchMethod=starts')
+        response = await fortnite_api_request(f'cosmetics/br/search/all?name={joinedArgs}&matchMethod=starts&language={request_lang}&searchLanguage={response_lang}')
 
         if response['status'] == 200:
 
