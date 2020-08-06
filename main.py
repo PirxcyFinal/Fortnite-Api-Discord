@@ -1,9 +1,13 @@
 # Fortnite-Api-Discord github.com/BayGamerYT/Fortnite-Api-Discord | Coding UTF-8
 print('Fortnite-Api-Discord | Made by BayGamerYT')
-print('\nSupport Server: discord.gg/5TVU3n7')
-
-
+print('Support Server: discord.gg/5TVU3n7')
 import json, sys, os
+
+if sys.platform == 'win32':
+    os.system("py -3 -m pip install -U -r requirements.txt")
+else:
+    os.system("pip install -U -r requirements.txt")
+
 try:
     from discord.ext import commands
     from threading import Thread
