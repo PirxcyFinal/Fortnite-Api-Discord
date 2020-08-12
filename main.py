@@ -8,6 +8,8 @@ if sys.platform == 'win32':
 else:
     os.system("pip install -U -r requirements.txt")
 
+text = {}
+
 try:
     from discord.ext import commands
     from threading import Thread
@@ -15,7 +17,7 @@ try:
     import aiohttp
     import discord
 except:
-    print(f'An error ocurred while trying to import third party library, run INSTALL.bat and try again!')
+    print(text['module_not_found'])
     sys.exit(1)
 
 with open('config.json', 'r') as r:
@@ -34,7 +36,7 @@ if data['Prefix'] == '':
 else:
     P = data['Prefix']
 if data['Token'] == '':
-    error = 'You need to put your bot token in config.json file.'
+    error = text['token_not_set_error']
     print(error)
     sys.exit(1)
 else:
@@ -52,8 +54,8 @@ def index():
 
 @bot.event
 async def on_ready():
-    print('\nBot Ready!\n')
-    print(f'Name: {bot.user.name}#{bot.user.discriminator}')
+    print('\n' + text['bot_ready'])
+    print(text['name'] + f': {bot.user.name}#{bot.user.discriminator}')
     print(f'ID: {bot.user.id}\n')
     Thread(target=app.run,args=("0.0.0.0",8080)).start()
 
@@ -70,8 +72,6 @@ async def fortnite_api_request(url: str, params: dict = {}) -> dict:
 
 @bot.command(pass_context=True)
 async def brnews(ctx, l = None):
-    """Show the current battle royale news"""
-
     res_lang = response_lang
     if l == None:
         res_lang = response_lang
@@ -82,7 +82,7 @@ async def brnews(ctx, l = None):
 
         image = response['data']['image']
 
-        embed = discord.Embed(title='Battle Royale News', description=None)
+        embed = discord.Embed(title=text['br_news'], description=None)
         embed.set_image(url=image)
 
         await ctx.send(embed=embed)
@@ -107,7 +107,6 @@ async def brnews(ctx, l = None):
 
 @bot.command(pass_context=True)
 async def item(ctx, *args):
-    """Search info for entered item name"""
     joinedArgs = ('+'.join(args))
 
     if args != None:
@@ -162,7 +161,6 @@ async def item(ctx, *args):
 
 @bot.command(pass_context=True)
 async def cc(ctx, code = None):
-    """Search info for requested creator code"""
     if code is not None:
 
         response = await fortnite_api_request(f'creatorcode?name={code}')

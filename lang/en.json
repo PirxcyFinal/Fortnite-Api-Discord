@@ -1,0 +1,18 @@
+{
+    "module_not_found_error": "An error ocurred while trying to import third party libraries",
+    "token_not_set_error": "You need to put your bot token in config.json file",
+    "bot_ready": "Bot Ready",
+    "name": "Name",
+    "br_news": "Battle Royale News",
+    "description": "Description",
+    "introduction": "Introduction",
+    "set": "Set",
+    "max_results_exceed_text": "There are {0} more results but I`m set to show {1}",
+    "creator_code_info": "Creator Code Info",
+    "code": "Code",
+    "account": "Account",
+    "id": "ID",
+    "active": "Active",
+    "inactive": "Inactive",
+    "verified_bool": "Verified?"
+}
