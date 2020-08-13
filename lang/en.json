@@ -2,6 +2,8 @@
     "module_not_found_error": "An error ocurred while trying to import third party libraries",
     "token_not_set_error": "You need to put your bot token in config.json file",
     "bot_ready": "Bot Ready",
+    "text_yes": "Yes",
+    "text_no": "No",
     "name": "Name",
     "br_news": "Battle Royale News",
     "description": "Description",
@@ -10,9 +12,13 @@
     "max_results_exceed_text": "There are {0} more results but I`m set to show {1}",
     "creator_code_info": "Creator Code Info",
     "code": "Code",
+    "status": "Status",
+    "none": "None",
     "account": "Account",
     "id": "ID",
+    "account_id": "Account ID",
     "active": "Active",
     "inactive": "Inactive",
-    "verified_bool": "Verified?"
+    "verified_bool": "Verified?",
+    "command_not_found_error": "Command not found"
 }

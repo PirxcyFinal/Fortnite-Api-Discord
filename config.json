@@ -2,6 +2,7 @@
     "Token": "",
     "Prefix": "",
     "Max_Search_Results": 3,
-    "Api response lang": "en",
-    "Api request lang": "en"
+    "Request lang": "en",
+    "Search lang": "en",
+    "bot_lang": "en"
 }

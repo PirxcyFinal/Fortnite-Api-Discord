@@ -8,7 +8,16 @@ if sys.platform == 'win32':
 else:
     os.system("pip install -U -r requirements.txt")
 
-text = {}
+with open('config.json', 'r') as r:
+    data = json.load(r)
+
+if data['bot_lang'] == 'en':
+    with open('lang/en.json', 'r', encoding='utf-8') as txt:
+        text = json.load(txt)
+
+elif data['bot_lang'] == 'es':
+    with open('lang/es.json', 'r', encoding='utf-8') as txt:
+        text = json.load(txt)
 
 try:
     from discord.ext import commands
@@ -19,18 +28,19 @@ try:
 except:
     print(text['module_not_found'])
     sys.exit(1)
-
-with open('config.json', 'r') as r:
-    data = json.load(r)
     
-if data['Api response lang'] == '':
+
+if data['Search lang'] == '':
     response_lang = 'en'
 else:
-    response_lang = data['Api response lang']
-if data['Api request lang'] == '':
+    response_lang = data['Search lang']
+
+if data['Request lang'] == '':
     request_lang = 'en'
 else:
-    request_lang = data['Api request lang']
+    request_lang = data['Request lang']
+
+
 if data['Prefix'] == '':
     P = 'f!'
 else:
@@ -124,23 +134,32 @@ async def item(ctx, *args):
                     item_description = item['description']
                     item_icon = item['images']['icon']
                     item_introduction = item['introduction']['text']
+
+
                     if item['set'] == None:
-                        item_set = 'None'
+                        item_set = text['none']
                     else:
                         item_set = item['set']['text']
 
+                    name = text['name']
+                    desc = text['description']
+                    intro = text['introduction']
+                    of_set = text['set']
+                    txt_id = text['id']
+
                     embed = discord.Embed(title=f'{item_name}')
-                    embed.add_field(name='Description', value=f'``{item_description}``')
-                    embed.add_field(name='ID', value=f'``{item_id}``')
-                    embed.add_field(name='Introduction', value=f'``{item_introduction}``')
-                    embed.add_field(name='Set', value=f'``{item_set}``')
+                    embed.add_field(name=desc, value=f'``{item_description}``')
+                    embed.add_field(name=txt_id, value=f'``{item_id}``')
+                    embed.add_field(name=intro, value=f'``{item_introduction}``')
+                    embed.add_field(name=of_set, value=f'``{item_set}``')
                     embed.set_thumbnail(url=item_icon)
                     await ctx.send(embed=embed)
                 else:
                     item_left_count+=1
             if item_left_count:
                 max_srch = data['Max_Search_Results']
-                await ctx.send(f'There are ``{item_left_count}`` more results but I\'m set to show ``{max_srch}``')
+                mx_txt = text['max_results_exceed_text']
+                await ctx.send(mx_txt.format(item_left_count, max_srch))
 
         elif response['status'] == 400:
             error = response['error']
@@ -171,19 +190,30 @@ async def cc(ctx, code = None):
             codestatus = response['data']['status']
             codeverified = response['data']['verified']
 
+            code = text['code']
+            account = text['account']
+            text_id = text['id']
+            active = text['active']
+            inactive = text['inactive']
+            verified_bool = text['verified_bool']
+            account_id = text['account_id']
+            yes = text['text_yes']
+            no = text['text_no']
+            status = text['status']
+
             embed = discord.Embed(title='Creator Code info', description=None)
-            embed.add_field(name='Code', value=f'``{code}``', inline=True)
-            embed.add_field(name='Account', value=f'``{codeAcc}``', inline=True)
-            embed.add_field(name='Account ID', value=f'``{codeAccID}``')
+            embed.add_field(name=code, value=f'``{code}``', inline=True)
+            embed.add_field(name=account, value=f'``{codeAcc}``', inline=True)
+            embed.add_field(name=account_id, value=f'``{codeAccID}``')
             if codestatus == 'ACTIVE':
-                embed.add_field(name='Status', value='``Active``', inline=True)
+                embed.add_field(name=status, value=f'``{active}``', inline=True)
             else:
-                embed.add_field(name='Status', value='``Inactive``', inline=True)
+                embed.add_field(name=status, value=f'``{inactive}``', inline=True)
             
             if codeverified == True:
-                embed.add_field(name='Verified?', value='``Yes``')
+                embed.add_field(name=verified_bool, value=f'``{yes}``')
             else:
-                embed.add_field(name='Verified?', value='``Yes``')
+                embed.add_field(name=verified_bool, value=f'``{no}``')
 
             await ctx.send(embed=embed)
         
@@ -207,7 +237,11 @@ async def cc(ctx, code = None):
 
 @bot.event
 async def on_command_error(ctx, error):
-    await ctx.send(f'```\n{error}```')
+    
+    if isinstance(error, commands.CommandNotFound):
+        await ctx.send(text['command_not_found_error'])
+    else:
+        raise error
 
 try:
     bot.run(T)
