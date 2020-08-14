@@ -28,7 +28,7 @@ Token:
 Puedes conseguir el token desde el archivo .env
 El archivo .env debe estar exactamente:
 ```
-Token=here_you_bot_token
+Token=aqui_el_token_de_tu_bot
 ```
 
 Idiomas del bot:
