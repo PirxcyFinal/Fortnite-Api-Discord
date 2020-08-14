@@ -2,18 +2,19 @@
 # Fortnite-Api Discord
 ![Preview](https://i.ibb.co/Th3CzzN/fortnite-api-discord-final.gif)
 
-This is a base in python to get fortnite data from [Fortnite-Api.com](https://fortnite-api.com/) using discord.py commands framework!
+Discord bot to get fortnite data from [Fortnite-Api.com](https://fortnite-api.com/) using discord.py!
 
 # Usage
 First you need to create an application in [Discord Developer Portal]([https://discord.com/developers/applications](https://discord.com/developers/applications)), make an Bot and copy the token.
 
 * **Configuration:**
 ```css
-Token                   : Your bot´s token [str]
+Token                   : Your bot´s token. [str] Leave it blank to get it from .env (see below for more)
 Prefix                  : Prefix for the commands. Leave it blank and it set automically to "f!" [str]
 MaxSearchResults        : Max search results for "item" command [int]
-Api response lang       : Default language of Fortnite-Api responses. Leave it blanck and it set automically to "en" [str]
-Api request lang        : Default language of Fortnite-Api requests. Leave it blanck and it set automically to "en" [str]
+Response lang           : Default language of Fortnite-Api responses. Leave it blank and it set automically to "en" [str]
+Search lang             : Default language of Fortnite-Api requests. Leave it blank and it set automically to "en" [str]
+bot_lang                : Idioma del bot en general (textos). Leave it blank and it set automically to "en" [str]
 ```
 
 * Configuration Options:
@@ -23,7 +24,18 @@ Api languages:
 ar / de / en / es / es-419 / fr / it / ja / ko / pl / pt-BR / ru / tr / zh-CN / zh-Hant
 ```
 
+Token:
+You can get your bot token from .env file if you leave token blank.
+The .env file need to be exactly like this:
+```
+Token=here_you_bot_token
+```
 
+Languages of the bot:
+```
+en / en
+```
+*You can provide translations in the support discord <3!
 
 * **Commands:**
 ```css

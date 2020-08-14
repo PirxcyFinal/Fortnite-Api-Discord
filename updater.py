@@ -209,11 +209,19 @@ if CheckUpdate("requirements.txt", githuburl):
     print("requirements.txt got updated. Run INSTALL\n")
     flag = True
 
+CheckUpdate("lang/en.json", githuburl)
+CheckUpdate("lang/es.json", githuburl)
+
+CheckUpdate("README.md", githuburl)
+CheckUpdate("README_ES.md", githuburl)
+
 CheckUpdate("config.json", githuburl)
+
 CheckUpdate("Install.bat", githuburl)
 CheckUpdate("Run.bat", githuburl)
 CheckUpdate("Update.bat", githuburl)
 CheckUpdate("Update-beta.bat", githuburl)
+
 CheckUpdate("LICENSE", githuburl)
 
 print("All update finished")

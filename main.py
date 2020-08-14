@@ -18,6 +18,12 @@ if data['bot_lang'] == 'en':
 elif data['bot_lang'] == 'es':
     with open('lang/es.json', 'r', encoding='utf-8') as txt:
         text = json.load(txt)
+else:
+    try:
+        with open('lang/en.json', 'r', encoding='utf-8') as txt:
+            text = json.load(txt)
+    except:
+        print('[CRITICAL] You don´t provide a valid lang for the bot and cant find en.json.')
 
 try:
     from discord.ext import commands
@@ -45,10 +51,13 @@ if data['Prefix'] == '':
     P = 'f!'
 else:
     P = data['Prefix']
+
 if data['Token'] == '':
     error = text['token_not_set_error']
     print(error)
     sys.exit(1)
+elif data['Token'] == 'ENV':
+    T = os.getenv('Token')
 else:
     T = data['Token']
 
@@ -244,7 +253,7 @@ async def on_command_error(ctx, error):
         raise error
 
 try:
-    bot.run(T)
+    bot.run(f'{T}')
 except Exception as e:
     print(e)
     sys.exit(0)
