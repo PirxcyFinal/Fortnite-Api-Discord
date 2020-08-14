@@ -4,6 +4,8 @@
 
 Discord bot to get fortnite data from [Fortnite-Api.com](https://fortnite-api.com/) using discord.py!
 
+**README en español >>> [README_ES](https://github.com/BayGamerYT/Fortnite-Api-Discord/blob/master/README_ES.md)
+
 # Usage
 First you need to create an application in [Discord Developer Portal]([https://discord.com/developers/applications](https://discord.com/developers/applications)), make an Bot and copy the token.
 
