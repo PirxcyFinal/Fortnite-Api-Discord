@@ -1,6 +1,5 @@
 {
     "module_not_found_error": "An error ocurred while trying to import third party libraries",
-    "token_not_set_error": "You need to put your bot token in config.json file",
     "bot_ready": "Bot Ready",
     "text_yes": "Yes",
     "text_no": "No",

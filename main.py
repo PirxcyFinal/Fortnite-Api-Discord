@@ -36,15 +36,15 @@ except:
     sys.exit(1)
     
 
-if data['Search lang'] == '':
+if data['Response lang'] == '':
     response_lang = 'en'
 else:
-    response_lang = data['Search lang']
+    response_lang = data['Response lang']
 
-if data['Request lang'] == '':
+if data['Search lang'] == '':
     request_lang = 'en'
 else:
-    request_lang = data['Request lang']
+    request_lang = data['Search lang']
 
 
 if data['Prefix'] == '':
@@ -53,10 +53,6 @@ else:
     P = data['Prefix']
 
 if data['Token'] == '':
-    error = text['token_not_set_error']
-    print(error)
-    sys.exit(1)
-elif data['Token'] == 'ENV':
     T = os.getenv('Token')
 else:
     T = data['Token']

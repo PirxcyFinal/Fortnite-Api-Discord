@@ -1,6 +1,5 @@
 {
     "module_not_found_error": "Ha ocurrido un error importando librerías de terceros",
-    "token_not_set_error": "Tienes que poner un token en config.json",
     "bot_ready": "Bot Listo",
     "text_yes": "Si",
     "text_no": "No",
