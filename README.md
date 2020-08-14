@@ -4,7 +4,7 @@
 
 Discord bot to get fortnite data from [Fortnite-Api.com](https://fortnite-api.com/) using discord.py!
 
-**README en español >>> [README_ES](https://github.com/BayGamerYT/Fortnite-Api-Discord/blob/master/README_ES.md)
+**README en español** >>> [README_ES](https://github.com/BayGamerYT/Fortnite-Api-Discord/blob/master/README_ES.md)
 
 # Usage
 First you need to create an application in [Discord Developer Portal]([https://discord.com/developers/applications](https://discord.com/developers/applications)), make an Bot and copy the token.
@@ -16,7 +16,7 @@ Prefix                  : Prefix for the commands. Leave it blank and it set aut
 MaxSearchResults        : Max search results for "item" command [int]
 Response lang           : Default language of Fortnite-Api responses. Leave it blank and it set automically to "en" [str]
 Search lang             : Default language of Fortnite-Api requests. Leave it blank and it set automically to "en" [str]
-bot_lang                : Idioma del bot en general (textos). Leave it blank and it set automically to "en" [str]
+bot_lang                : General bot lang (text). Leave it blank and it set automically to "en" [str]
 ```
 
 * Configuration Options:
