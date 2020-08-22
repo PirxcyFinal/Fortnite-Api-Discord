@@ -8,8 +8,12 @@ if sys.platform == 'win32':
 else:
     os.system("pip install -U -r requirements.txt")
 
+
+
 with open('config.json', 'r') as r:
     data = json.load(r)
+
+
 
 if data['bot_lang'] == 'en':
     with open('lang/en.json', 'r', encoding='utf-8') as txt:
@@ -32,7 +36,7 @@ try:
     import aiohttp
     import discord
 except:
-    print(text['module_not_found'])
+    print(text['module_not_found_error'])
     sys.exit(1)
     
 
@@ -120,6 +124,28 @@ async def brnews(ctx, l = None):
 
         await ctx.send(embed=embed)
 
+def c(value):
+    if value == 'legendary':
+        return 0xf0b132
+    elif value == 'epic':
+        return 0x9d4dbb
+    elif value =='rare':
+        return 0x4c51f
+    elif value == 'uncommon':
+        return 0x65b851
+    elif value == 'common':
+        return 0x575757
+    elif value == 'icon':
+        return 0x27aee3
+    elif value == 'marvel':
+        return 0xED1D24
+    elif value == 'shadow':
+        return 0x292929
+    elif value == 'dc':
+        return 0x2b3147
+    else:
+        return 0xffffff
+
 @bot.command(pass_context=True)
 async def item(ctx, *args):
     joinedArgs = ('+'.join(args))
@@ -139,7 +165,7 @@ async def item(ctx, *args):
                     item_description = item['description']
                     item_icon = item['images']['icon']
                     item_introduction = item['introduction']['text']
-
+                    item_rarity = item['rarity']['displayValue']
 
                     if item['set'] == None:
                         item_set = text['none']
@@ -151,14 +177,20 @@ async def item(ctx, *args):
                     intro = text['introduction']
                     of_set = text['set']
                     txt_id = text['id']
+                    rarity = text['rarity']
 
-                    embed = discord.Embed(title=f'{item_name}')
+
+                    embed = discord.Embed(title=f'{item_name}', color=c(item['rarity']['value']))
+
                     embed.add_field(name=desc, value=f'``{item_description}``')
                     embed.add_field(name=txt_id, value=f'``{item_id}``')
                     embed.add_field(name=intro, value=f'``{item_introduction}``')
                     embed.add_field(name=of_set, value=f'``{item_set}``')
+                    embed.add_field(name=rarity, value=f'``{item_rarity}``')
                     embed.set_thumbnail(url=item_icon)
+
                     await ctx.send(embed=embed)
+
                 else:
                     item_left_count+=1
             if item_left_count:
