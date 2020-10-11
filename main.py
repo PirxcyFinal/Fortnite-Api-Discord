@@ -1,92 +1,55 @@
 # Fortnite-Api-Discord github.com/BayGamerYT/Fortnite-Api-Discord | Coding UTF-8
 print('Fortnite-Api-Discord | Made by BayGamerYT')
-print('Support Server: discord.gg/5TVU3n7')
-import json, sys, os
-
-if sys.platform == 'win32':
-    os.system("py -3 -m pip install -U -r requirements.txt")
-else:
-    os.system("pip install -U -r requirements.txt")
+import json, os
 
 
+def data():
+    with open('config.json', 'r', encoding='utf-8') as f:
+        return json.load(f)
 
-with open('config.json', 'r') as r:
-    data = json.load(r)
-
-
-
-if data['bot_lang'] == 'en':
-    with open('lang/en.json', 'r', encoding='utf-8') as txt:
-        text = json.load(txt)
-
-elif data['bot_lang'] == 'es':
-    with open('lang/es.json', 'r', encoding='utf-8') as txt:
-        text = json.load(txt)
-else:
+def text():
     try:
-        with open('lang/en.json', 'r', encoding='utf-8') as txt:
-            text = json.load(txt)
+        with open(f'lang/{data()["bot_lang"]}.json', 'r', encoding='utf-8') as f:
+            return json.load(f)
     except:
-        print('[CRITICAL] You don´t provide a valid lang for the bot and cant find en.json.')
+        print('Invalid lang in settings')
+        exit()
+
 
 try:
     from discord.ext import commands
     from threading import Thread
     from flask import Flask
+    import requests
     import aiohttp
     import discord
 except:
-    print(text['module_not_found_error'])
-    sys.exit(1)
+    print(text()['module_not_found_error'])
+    exit()
     
 
-if data['Response lang'] == '':
-    response_lang = 'en'
-else:
-    response_lang = data['Response lang']
+response_lang = 'en' if data()['Response lang'] == '' else data()['Response lang']
+request_lang = 'en' if data()['Search lang'] == '' else data()['Search lang']
 
-if data['Search lang'] == '':
-    request_lang = 'en'
-else:
-    request_lang = data['Search lang']
+T = os.getenv('Token') if data()['Token'] == 'ENV' else data()['Token']
 
 
-if data['Prefix'] == '':
-    P = 'f!'
-else:
-    P = data['Prefix']
+bot = commands.Bot(command_prefix=data()['Prefix'])
 
-if data['Token'] == '':
-    T = os.getenv('Token')
-else:
-    T = data['Token']
-
-
-bot = commands.Bot(command_prefix=P)
 
 app=Flask("")
-
 @app.route("/")
 def index():
-    return "<h1>Bot is running</h1>"
+    return "Running"
 
 
 @bot.event
 async def on_ready():
-    print('\n' + text['bot_ready'])
-    print(text['name'] + f': {bot.user.name}#{bot.user.discriminator}')
+    print('\n' + text()['bot_ready'])
+    print(text()['name'] + f': {bot.user.name}#{bot.user.discriminator}')
     print(f'ID: {bot.user.id}\n')
     Thread(target=app.run,args=("0.0.0.0",8080)).start()
 
-
-FORTNITE_API_BASE = 'https://fortnite-api.com/v2/'
-
-async def fortnite_api_request(url: str, params: dict = {}) -> dict:
-    async with aiohttp.ClientSession() as session:
-        async with session.request(
-                method='GET', url=f'{FORTNITE_API_BASE}{url}',
-                params=params) as r:
-            return await r.json()
 
 
 @bot.command(pass_context=True)
@@ -95,54 +58,66 @@ async def brnews(ctx, l = None):
     if l == None:
         res_lang = response_lang
 
-    response = await fortnite_api_request(f'news/br?language={res_lang}')
+    response = requests.get(f'https://fortnite-api.com/v2/news/br?language={res_lang}')
+
+    geted = response.json()
         
-    if response['status'] == 200:
+    if response.status_code == 200:
 
-        image = response['data']['image']
+        image = geted['data']['image']
 
-        embed = discord.Embed(title=text['br_news'], description=None)
+        embed = discord.Embed(title=text()['br_news'])
         embed.set_image(url=image)
 
         await ctx.send(embed=embed)
 
-    elif response['status'] == 400:
+    elif response.status_code == 400:
  
-        error = response['error']
+        error = geted['error']
 
         embed = discord.Embed(title='Error', 
-                description=f'``{error}``')
+                description=f'`{error}`')
 
         await ctx.send(embed=embed)
 
-    elif response['status'] == 404:
+    elif response.status_code == 404:
 
-        error = response['error']
+        error =geted['error']
 
         embed = discord.Embed(title='Error', 
         description=f'``{error}``')
 
         await ctx.send(embed=embed)
 
-def c(value):
+def color(value):
     if value == 'legendary':
         return 0xf0b132
     elif value == 'epic':
         return 0x9d4dbb
-    elif value =='rare':
-        return 0x4c51f
+    elif value == 'rare':
+        return 0x0086FF
     elif value == 'uncommon':
         return 0x65b851
     elif value == 'common':
         return 0x575757
     elif value == 'icon':
-        return 0x27aee3
+        return 0x00FFFF
     elif value == 'marvel':
         return 0xED1D24
     elif value == 'shadow':
         return 0x292929
     elif value == 'dc':
         return 0x2b3147
+    elif value == 'slurp':
+        return 0x09E0F0
+    elif value == 'dark':
+        return 0xFF00FF
+    elif value == 'frozen':
+        return 0x93F7F6
+    elif value == 'lava':
+        return 0xF55F35
+    elif value == 'starwars':
+        return 0xCCCC00
     else:
         return 0xffffff
 
@@ -151,14 +126,19 @@ async def item(ctx, *args):
     joinedArgs = ('+'.join(args))
 
     if args != None:
-        response = await fortnite_api_request(f'cosmetics/br/search/all?name={joinedArgs}&matchMethod=starts&language={response_lang}&searchLanguage={request_lang}')
+        response = requests.get(f'https://fortnite-api.com/v2/cosmetics/br/search/all?name={joinedArgs}&matchMethod=starts&language={response_lang}&searchLanguage={request_lang}')
 
-        if response['status'] == 200:
+        geted = response.json()
+
+        if response.status_code == 200:
 
             embed_count=0
             item_left_count=0
-            for item in response['data']:
-                if embed_count != data['Max_Search_Results']:
+
+            for item in geted['data']:
+
+                if embed_count != data()['Max_Search_Results']:
+
                     embed_count+=1
                     item_id = item['id']
                     item_name = item['name']
@@ -168,25 +148,25 @@ async def item(ctx, *args):
                     item_rarity = item['rarity']['displayValue']
 
                     if item['set'] == None:
-                        item_set = text['none']
+                        item_set = text()['none']
                     else:
                         item_set = item['set']['text']
 
-                    name = text['name']
-                    desc = text['description']
-                    intro = text['introduction']
-                    of_set = text['set']
-                    txt_id = text['id']
-                    rarity = text['rarity']
+                    name = text()['name']
+                    desc = text()['description']
+                    intro = text()['introduction']
+                    of_set = text()['set']
+                    txt_id = text()['id']
+                    rarity = text()['rarity']
 
 
-                    embed = discord.Embed(title=f'{item_name}', color=c(item['rarity']['value']))
+                    embed = discord.Embed(title=f'{item_name}', color=color(item['rarity']['value']))
 
-                    embed.add_field(name=desc, value=f'``{item_description}``')
-                    embed.add_field(name=txt_id, value=f'``{item_id}``')
-                    embed.add_field(name=intro, value=f'``{item_introduction}``')
-                    embed.add_field(name=of_set, value=f'``{item_set}``')
-                    embed.add_field(name=rarity, value=f'``{item_rarity}``')
+                    embed.add_field(name=desc, value=f'`{item_description}`')
+                    embed.add_field(name=txt_id, value=f'`{item_id}`')
+                    embed.add_field(name=intro, value=f'`{item_introduction}`')
+                    embed.add_field(name=of_set, value=f'`{item_set}`')
+                    embed.add_field(name=rarity, value=f'`{item_rarity}`')
                     embed.set_thumbnail(url=item_icon)
 
                     await ctx.send(embed=embed)
@@ -194,20 +174,20 @@ async def item(ctx, *args):
                 else:
                     item_left_count+=1
             if item_left_count:
-                max_srch = data['Max_Search_Results']
-                mx_txt = text['max_results_exceed_text']
+                max_srch = data()['Max_Search_Results']
+                mx_txt = text()['max_results_exceed_text']
                 await ctx.send(mx_txt.format(item_left_count, max_srch))
 
-        elif response['status'] == 400:
-            error = response['error']
+        elif response.status_code == 400:
+            error = geted['error']
 
             embed = discord.Embed(title='Error', 
             description=f'``{error}``')
 
             await ctx.send(embed=embed)
 
-        elif response['status'] == 404:
-            error = response['error']
+        elif response.status_code == 404:
+            error = geted['error']
 
             embed = discord.Embed(title='Error', 
             description=f'``{error}``')
@@ -217,26 +197,28 @@ async def item(ctx, *args):
 
 @bot.command(pass_context=True)
 async def cc(ctx, code = None):
-    if code is not None:
+    if code != None:
 
-        response = await fortnite_api_request(f'creatorcode?name={code}')
+        response = requests.get(f'https://fortnite-api.com/v2/creatorcode?name={code}')
+        geted = response.json()
 
-        if response['status'] == 200:
-            codeAcc = response['data']['account']['name']
-            codeAccID = response['data']['account']['id']
-            codestatus = response['data']['status']
-            codeverified = response['data']['verified']
+        if response.status_code == 200:
 
-            code = text['code']
-            account = text['account']
-            text_id = text['id']
-            active = text['active']
-            inactive = text['inactive']
-            verified_bool = text['verified_bool']
-            account_id = text['account_id']
-            yes = text['text_yes']
-            no = text['text_no']
-            status = text['status']
+            codeAcc =geted['data']['account']['name']
+            codeAccID =geted['data']['account']['id']
+            codestatus =geted['data']['status']
+            codeverified =geted['data']['verified']
+
+            code = text()['code']
+            account = text()['account']
+            text_id = text()['id']
+            active = text()['active']
+            inactive = text()['inactive']
+            verified_bool = text()['verified_bool']
+            account_id = text()['account_id']
+            yes = text()['text_yes']
+            no = text()['text_no']
+            status = text()['status']
 
             embed = discord.Embed(title='Creator Code info', description=None)
             embed.add_field(name=code, value=f'``{code}``', inline=True)
@@ -254,18 +236,18 @@ async def cc(ctx, code = None):
 
             await ctx.send(embed=embed)
         
-        elif response['status'] == 400:
+        elif response.status_code == 400:
 
-            error = response['error']
+            error = geted['error']
 
             embed = discord.Embed(title='Error', 
             description=f'``{error}``')
 
             await ctx.send(embed=embed)
 
-        elif response['status'] == 404:
+        elif response.status_code == 404:
 
-            error = response['error']
+            error = geted['error']
 
             embed = discord.Embed(title='Error', 
             description=f'``{error}``')
@@ -276,12 +258,13 @@ async def cc(ctx, code = None):
 async def on_command_error(ctx, error):
     
     if isinstance(error, commands.CommandNotFound):
-        await ctx.send(text['command_not_found_error'])
+        await ctx.send(text()['command_not_found_error'])
     else:
         raise error
+    
 
 try:
-    bot.run(f'{T}')
+    bot.run(T)
 except Exception as e:
     print(e)
-    sys.exit(0)
+    exit()

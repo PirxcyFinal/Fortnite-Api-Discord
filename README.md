@@ -1,5 +1,6 @@
 
 # Fortnite-Api Discord
+
 ![Preview](https://i.ibb.co/Th3CzzN/fortnite-api-discord-final.gif)
 
 Discord bot to get fortnite data from [Fortnite-Api.com](https://fortnite-api.com/) using discord.py!
@@ -7,9 +8,11 @@ Discord bot to get fortnite data from [Fortnite-Api.com](https://fortnite-api.co
 **README en español** >>> [README_ES](https://github.com/BayGamerYT/Fortnite-Api-Discord/blob/master/README_ES.md)
 
 # Usage
+
 First you need to create an application in [Discord Developer Portal]([https://discord.com/developers/applications](https://discord.com/developers/applications)), make an Bot and copy the token.
 
 * **Configuration:**
+
 ```css
 Token                   : Your bot´s token. [str] Leave it blank to get it from .env (see below for more)
 Prefix                  : Prefix for the commands. Leave it blank and it set automically to "f!" [str]
@@ -45,7 +48,3 @@ item     : Get info for item name
 brnews   : Show a embedded gif with the last BR News
 cc       : Get info for requested creator code
 ```
-
-
-**Please Note:**
-If you are going to use this bot on a project I appreciate if you leave credits!
